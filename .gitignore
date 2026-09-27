@@ -1,0 +1,6 @@
+bin/
+dist/
+web/dist/*
+!web/dist/.gitkeep
+web/elm-stuff/
+*.db

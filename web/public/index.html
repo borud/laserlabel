@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+    <title>laserlabel</title>
+    <link rel="stylesheet" href="styles/main.css">
+</head>
+<body>
+    <div id="app"></div>
+    <script src="elm.js"></script>
+    <script>
+        Elm.Main.init({ node: document.getElementById("app"), flags: location.hash });
+
+        // Keep the screen on while the page is visible. Browsers only allow
+        // this over HTTPS or on localhost; elsewhere it silently does nothing.
+        async function keepAwake() {
+            try {
+                if ("wakeLock" in navigator && document.visibilityState === "visible") {
+                    await navigator.wakeLock.request("screen");
+                }
+            } catch (e) {
+                console.log("wake lock unavailable", e);
+            }
+        }
+        document.addEventListener("visibilitychange", keepAwake);
+        keepAwake();
+
+        // This is a control surface: never zoom on pinch or double tap.
+        document.addEventListener("gesturestart", (e) => e.preventDefault());
+        // Double-tap zoom is disabled with CSS touch-action, which keeps
+        // fast repeated taps working (important for jogging).
+
+        // Open and reveal the Machine section when the machine name is tapped.
+        function openMachine() {
+            if (location.hash !== "#machine") return;
+            requestAnimationFrame(() => {
+                const el = document.getElementById("machine");
+                if (!el) return;
+                el.open = true;
+                el.scrollIntoView({ behavior: "smooth", block: "start" });
+            });
+        }
+        window.addEventListener("hashchange", openMachine);
+        setTimeout(openMachine, 1500);
+        document.addEventListener("click", (e) => {
+            if (e.target.closest("a.machine-link")) setTimeout(openMachine, 50);
+        });
+    </script>
+</body>
+</html>

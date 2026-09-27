@@ -1,0 +1,29 @@
+name: "${COMPONENT}"
+arch: "${GOARCH}"
+platform: "linux"
+version: "${PACKAGE_VERSION}"
+maintainer: "${MAINTAINER}"
+description: "Laser label maker for Makera Carvera machines, with a web UI"
+vendor: "Bjørn Borud"
+homepage: "https://github.com/borud/laserlabel"
+license: "Proprietary"
+
+contents:
+  - src: bin/laserlabel-${GOARCH}-linux
+    dst: /usr/bin/laserlabel
+
+  - src: etc/laserlabel.env
+    dst: /etc/laserlabel/laserlabel.env
+    type: config
+
+  - src: systemd/laserlabel.service
+    dst: /lib/systemd/system/laserlabel.service
+
+scripts:
+  postinstall: deb/scripts/postinstall.sh
+  preremove: deb/scripts/preremove.sh
+  postremove: deb/scripts/postremove.sh
+
+recommends:
+  - fonts-dejavu-core
+  - fonts-liberation

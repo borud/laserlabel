@@ -1,0 +1,18 @@
+[Unit]
+Description=laserlabel web UI for Makera laser labelling
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+EnvironmentFile=/etc/laserlabel/laserlabel.env
+ExecStart=/usr/bin/laserlabel serve
+Restart=on-failure
+RestartSec=5
+DynamicUser=yes
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes
+
+[Install]
+WantedBy=multi-user.target
